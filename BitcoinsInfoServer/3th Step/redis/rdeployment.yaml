@@ -1,0 +1,31 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-deploy
+  labels:
+    app: my-redis
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: my-redis
+  template:
+    metadata:
+      labels:
+        app: my-redis
+    spec:
+      containers:
+      - name: my-redis
+        image: redis
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 6379
+          name: my-redis
+        volumeMounts:
+          - name: persist-storage
+            mountPath: /data
+      volumes:
+        - name: persist-storage
+          persistentVolumeClaim:
+            claimName: redis-pv-claim
